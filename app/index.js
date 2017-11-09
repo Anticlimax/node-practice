@@ -11,19 +11,30 @@ class App {
   initServer() {
     return (req, res) => {
       let {url} = req
+
       let body = ''
+      let headers = {}
       // 所有以action结尾的url 认为是ajax
       if (url.match('action')) {
-        body = apiServer(url)
-        res.writeHead(200, 'resolve ok', {
-          'X-powered-by': 'Node.js',
-          'Content-Type': 'application/json'
+        apiServer(url).then(val => {
+          body = JSON.stringify(val)
+          headers = {
+            'Content-Type': 'application/json'
+          }
+          res.writeHead(200, 'resolve ok', {
+            'X-powered-by': 'Node.js',
+            ...headers
+          })
+          res.end(body)
         })
-        res.end(JSON.stringify(body))
       } else {
-        body = staticServer(url)
-        res.writeHead(200, 'resolve ok', {'X-powered-by': 'Node.js'})
-        res.end(body)
+        staticServer(url).then((body) => {
+          res.writeHead(200, 'resolve ok', {
+            'X-powered-by': 'Node.js',
+            ...headers
+          })
+          res.end(body)
+        })
       }
     }
   }

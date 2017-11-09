@@ -3,5 +3,5 @@ module.exports = url => {
     '/list.action': ['吉他', '三只松鼠', 'mongodb'],
     '/user.action': ['hello', 'world', 'liyang']
   }
-  return apiMap[url]
+  return Promise.resolve(apiMap[url])
 }
