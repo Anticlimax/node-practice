@@ -4,10 +4,32 @@ const fs = require('fs')
 const path = require('path')
 const staticServer = require('./static-server')
 const apiServer = require('./api')
-const urlParse = require('./url-parser')
+const urlParser = require('./url-parser')
 
 class App {
-  constructor() {}
+  constructor() {
+    this.middlewareArr = []
+    this.middlewareChain = Promise.resolve()
+  }
+
+  use(middleware) {
+    this
+      .middlewareArr
+      .push(middleware)
+  }
+  // 创建promise链
+  composeMiddleware(context) {
+    let {middlewareArr} = this
+    // 根据中间件数组创建promise链
+    middlewareArr.forEach(middleware => {
+      this.middlewareChain = this
+        .middlewareChain
+        .then(() => {
+          return middleware(context)
+        })
+    })
+    return this.middlewareChain
+  }
 
   initServer() {
     return (req, res) => {
@@ -21,33 +43,36 @@ class App {
         query: '',
         method: 'get'
       }
-      urlParse(req).then(val => {
-        return apiServer(req)
-      }).then(val => {
-        if (!val) {
-          // Promise
-          return staticServer(req)
-        } else {
-          return val
+
+      let context = {
+        req,
+        reqCtx: {
+          body: '', // post请求的数据
+          query: {} // get请求的数据
+        },
+        res,
+        resCtx: {
+          headers: {}, // res的返回报文
+          body: '' // 返回给前端的内容区
         }
-      }).then(val => {
-        let base = {
-          'X-powered-by': 'Node.js'
-        }
-        let body = ''
-        if (val instanceof Buffer) {
-          body = val
-          res.end(body)
-        } else {
-          body = JSON.stringify(val)
-          let finalHeader = {
-            ...base,
-            'Content-Type': 'application/json'
+      }
+      // 中间件依赖 Promise + request + response Promise.resolve(参数) => 通过context对象来传递
+      // 1. 每一块中间件相互独立，只需要关注修改context
+      // 2. 设计了use和composeMiddleware这两个api用来创建promise链
+      // 3. 开发者可以专注于中间件开发
+      this
+        .composeMiddleware(context)
+        .then(() => {
+          let base = {
+            'X-powered-by': 'Node.js'
           }
-          res.writeHead(200, 'resolve ok', finalHeader)
-        }
-        res.end(body)
-      })
+          let {body, headers} = context.resCtx
+          res.writeHead(200, 'resolve ok', {
+            ...base,
+            ...headers
+          })
+          res.end(body)
+        })
     }
   }
 }
