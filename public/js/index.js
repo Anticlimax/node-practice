@@ -1,7 +1,7 @@
 setTimeout(() => {
   $.ajax({
     url: '/user.action',
-    methods: 'get',
+    method: 'get',
     success: function (data) {
       const liStr = data.map(e=>{
         return `<li>${e}</li>`
@@ -14,7 +14,13 @@ setTimeout(() => {
   })
   $.ajax({
     url: '/list.action',
-    methods: 'get',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: JSON.stringify([
+      'name', 'liyang'
+    ]),
     success: function (data) {
       const liStr = data.map(e=>{
         return `<li>${e}</li>`
