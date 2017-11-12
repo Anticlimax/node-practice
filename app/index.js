@@ -52,6 +52,7 @@ class App {
         },
         res,
         resCtx: {
+          hasUser: false, // 判断是否登录
           headers: {}, // res的返回报文
           body: '', // 返回给前端的内容区
           statusCode: 200, // 状态码

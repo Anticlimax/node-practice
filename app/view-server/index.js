@@ -19,19 +19,17 @@ module.exports = (ctx) => {
         if (ejsName) {
           let layoutPath = path.resolve(viewPath, 'layout.ejs')
           let layoutHtml = fs.readFileSync(layoutPath, 'utf8')
-          let htmlPath = path.resolve(viewPath, ejsName + '.ejs')
-          // let html = fs.readFileSync(htmlPath, 'utf8')
 
           let render = ejs.compile(layoutHtml, {
             compileDebug: true,
             filename: layoutPath
           })
 
-          let html = render({templateName: ejsName})
+          let html = render({templateName: ejsName, hasUser: resCtx.hasUser})
 
           resCtx.headers = {
             ...resCtx.headers,
-            'Content-Type': mime.getType(htmlPath)
+            'Content-Type': mime.getType(layoutPath)
           }
           resCtx.body = html
           resolve()
