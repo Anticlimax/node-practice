@@ -1,13 +1,14 @@
-var plugins = require('./plugin_loader.js')['plugins']
-var loaders = require('./plugin_loader.js')['loaders']
-var path = require('path')
+
+var plugins = require('./plugin_loader.js')['plugins'];
+var loaders = require('./plugin_loader.js')['loaders'];
+var path = require('path');
 var AddResolve = (obj) => {
-    var transObj = {}
+    var transObj = {};
     for (var key in obj) {
         transObj[key] = path.resolve(process.cwd(), obj[key])
     }
-    return transObj
-}
+    return transObj;
+};
 //webpack配置文件
 module.exports = {
     watch: true,
@@ -30,4 +31,4 @@ module.exports = {
     module: {
         rules: loaders
     }
-}
+};

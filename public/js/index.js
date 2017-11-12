@@ -1,3 +1,6 @@
+require('../css/index.scss')
+require('highlight.js').initHighlightingOnLoad()
+
 setTimeout(() => {
   $.ajax({
     url: '/user.action',

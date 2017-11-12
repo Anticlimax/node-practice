@@ -53,7 +53,9 @@ class App {
         res,
         resCtx: {
           headers: {}, // res的返回报文
-          body: '' // 返回给前端的内容区
+          body: '', // 返回给前端的内容区
+          statusCode: 200, // 状态码
+          statusMessage: 'resolve ok'
         }
       }
       // 中间件依赖 Promise + request + response Promise.resolve(参数) => 通过context对象来传递
@@ -66,8 +68,8 @@ class App {
           let base = {
             'X-powered-by': 'Node.js'
           }
-          let {body, headers} = context.resCtx
-          res.writeHead(200, 'resolve ok', {
+          let {body, headers, statusCode, statusMessage} = context.resCtx
+          res.writeHead(statusCode, statusMessage, {
             ...base,
             ...headers
           })
