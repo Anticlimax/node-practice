@@ -1,11 +1,15 @@
 // 处理客户端数据 request: query + body + method
 
+const Url = require('url')
 module.exports = (ctx) => {
 
-  let {url, method} = ctx.req
+  let {method} = ctx.reqCtx
   let {reqCtx} = ctx
-  method = method.toLowerCase()
 
+  // method = method.toLowerCase()
+  // Object.assign(reqCtx, Url.parse(url, true), {method})
+  // console.log(reqCtx)
+  
   return Promise.resolve({
     then: (resolve, reject) => {
       if (method == 'post') {

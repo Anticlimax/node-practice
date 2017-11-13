@@ -7,15 +7,15 @@ const mime = require('mime')
 const urlrewriteMap = require('./urlrewrite')
 
 module.exports = (ctx) => {
-  let {req, resCtx} = ctx
-  let {url} = req
+  let {req, resCtx, reqCtx} = ctx
+  let {pathname} = reqCtx
   return Promise.resolve({
     then: (resolve, reject) => {
-      if (url.match('action') || url.match(/\./)) {
+      if (pathname.match('action') || pathname.match(/\./)) {
         resolve()
       } else {
         const viewPath = path.resolve(__dirname, 'ejs')
-        let ejsName = urlrewriteMap[url]
+        let ejsName = urlrewriteMap[pathname]
         if (ejsName) {
           let layoutPath = path.resolve(viewPath, 'layout.ejs')
           let layoutHtml = fs.readFileSync(layoutPath, 'utf8')
