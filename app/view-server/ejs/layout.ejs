@@ -1,7 +1,8 @@
 <%- include('./module/header.ejs') %>
 
-<div class="content">
-<%- include(templateName) %>
+<div class="main-module">
+  <div id="mod-<%- viewName %>"></div>
 </div>
-
+<script src="/dist/common.js"></script>
+<script src="/dist/<%- viewName %>.js"></script>
 <%- include('./module/footer.ejs') %>

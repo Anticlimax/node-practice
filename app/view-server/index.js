@@ -25,7 +25,7 @@ module.exports = (ctx) => {
             filename: layoutPath
           })
 
-          let html = render({templateName: ejsName, hasUser: resCtx.hasUser})
+          let html = render({viewName: ejsName, hasUser: resCtx.hasUser})
 
           resCtx.headers = {
             ...resCtx.headers,

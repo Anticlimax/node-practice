@@ -1,7 +1,7 @@
 const cookie_parser = require('cookie')
 const Url = require('url')
 // 白名单
-const whiteNameList = ['/name_liyang']
+const whiteNameList = ['/liyang']
 
 module.exports = (ctx) => {
   let {res, resCtx, reqCtx} = ctx
